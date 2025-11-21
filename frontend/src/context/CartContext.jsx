@@ -15,8 +15,10 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product) => {
         setCart((prev) => {
-            const existing = prev.find((item) => item.id === product.id);
+            const productId = Number(product.id);
+            const existing = prev.find((item) => Number(item.id) === productId);
             if (existing) {
+                console.log("Existing product found, increasing quantity");
                 return prev.map((item) =>
                     item.id === product.id
                         ? { ...item, quantity: item.quantity + 1 }
@@ -44,8 +46,7 @@ export const CartProvider = ({ children }) => {
 
     return (
         <CartContext.Provider
-            value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}
-        >
+            value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
             {children}
         </CartContext.Provider>
     );

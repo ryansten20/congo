@@ -143,6 +143,22 @@ export const logout = async () => {
     });
 };
 
+// ============================================
+// ORDER ENDPOINTS
+// ============================================
+
+/**
+ * Checkout a new order
+ * @param {Object} orderData - Order data
+ * @returns {Promise<Object>} Order data
+ */
+export const checkout = async (orderData) => {
+    return await apiFetch('/orders', {
+        method: 'POST',
+        body: JSON.stringify(orderData),
+    });
+};
+
 // Export the base URL for reference
 export { API_BASE_URL };
 

@@ -1,14 +1,55 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import "./cart.css";
+import { checkout } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Cart() {
+    const [checkoutLoading, setCheckoutLoading] = useState(false);
+    const [checkoutError, setCheckoutError] = useState(null);
+    const [checkoutSuccess, setCheckoutSuccess] = useState(false);
     const { cart, updateQuantity, removeFromCart, clearCart } = useContext(CartContext);
-    const subtotal = cart.reduce((acc, cur) => acc + parseFloat(cur.price) * cur.quantity, 0);
+    const { user }= useAuth();
+
+    if(!cart || cart.length === 0) {
+        return <div>Loading...</div>;
+    }
 
     if (cart.length === 0) {
         return <div className="cart">Your cart is empty.</div>;
     }
+
+    const subtotal = cart.reduce((acc, cur) => acc + parseFloat(cur.price) * cur.quantity, 0);
+
+
+    const handleCheckout = async () => {
+        setCheckoutLoading(true); 
+        setCheckoutError(null);
+        setCheckoutSuccess(false);
+
+        if(!user) {
+            setCheckoutError("Please login to checkout");
+            return;
+        }
+
+        try {
+            const items = cart.map((item) => ({
+                product_id: item.id,
+                quantity: item.quantity,
+            }));
+            const result = await checkout({ user_id: user.id, items: items });
+            if(result.success) {
+                setCheckoutSuccess(true);
+                clearCart();
+            } else {
+                setCheckoutError(result.error);
+            }
+        } catch (error) {
+            setCheckoutError(error.message);
+        } finally {
+            setCheckoutLoading(false);
+    }
+};
 
     return (
         <div className="cart">
@@ -41,7 +82,7 @@ export default function Cart() {
             <div className="subtotal">
                 <h2>Subtotal: ${subtotal.toFixed(2)}</h2>
                 <button onClick={clearCart}>Clear Cart</button>
-                <button>Checkout</button>
+                <button onClick={handleCheckout} disabled={checkoutLoading}>{checkoutLoading ? "Checking out..." : "Checkout"}</button>
             </div>
         </div>
     );
