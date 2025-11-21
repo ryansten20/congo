@@ -28,3 +28,6 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 // ORDER ROUTES 
 // ============================================
 Route::post('/orders', [OrderController::class, 'checkout']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
+Route::get('/orders/user/{userId}', [OrderController::class, 'getByUserId']);
+Route::get('/orders/status/{status}', [OrderController::class, 'getByStatus']);

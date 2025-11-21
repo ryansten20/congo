@@ -159,6 +159,23 @@ export const checkout = async (orderData) => {
     });
 };
 
+/**
+ * Get an order by ID
+ * @param {number} id - Order ID
+ * @returns {Promise<Object>} Order data
+ */
+export const getOrderById = async (id) => {
+    return await apiFetch(`/orders/${id}`);
+};
+
+/**
+ * Get all orders by user ID
+ * @param {number} userId - User ID
+ * @returns {Promise<Array>} Array of orders
+ */
+export const getOrdersByUserId = async (userId) => {
+    return await apiFetch(`/orders/user/${userId}`);
+};
 // Export the base URL for reference
 export { API_BASE_URL };
 

@@ -53,4 +53,22 @@ class OrderController extends Controller
             'order' => $order,
         ]);
     }
+    // Get an order by ID
+    public function show($id)
+    {
+        $order = Order::with('orderItems')->find($id);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+        return response()->json($order);
+        }
+    // Get all orders by user ID
+    public function getByUserId($userId)
+    {
+        $orders = Order::with('orderItems')->where('user_id', $userId)->get();
+        if (!$orders) {
+            return response()->json(['message' => 'Orders not found'], 404);
+        }
+        return response()->json($orders);
+    }
 }

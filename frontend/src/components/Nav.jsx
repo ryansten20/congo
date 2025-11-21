@@ -1,13 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useAuth } from "../context/AuthContext";
 import "./Nav.css";
+import { CartContext } from "../context/CartContext";
+
 
 export default function Nav() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const navigate = useNavigate();
     const { user, logout, isAuthenticated } = useAuth();
+    const { getCartTotalQuantity } = useContext(CartContext);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -55,7 +58,8 @@ export default function Nav() {
                         <>
                             <Link to="/" className="nav-link">Home</Link>
                             <Link to="/crime" className="nav-link">Crime Video</Link>
-                            <Link to="/cart" className="nav-link">Cart</Link>
+                            <Link to="/cart" className="nav-link">Cart ({getCartTotalQuantity()})</Link>
+                            <Link to="/orders" className="nav-link">Orders</Link>
                             <span className="nav-link" style={{color: '#4a5568'}}>
                                 Welcome, {user?.name || user?.email || 'User'}!
                             </span>

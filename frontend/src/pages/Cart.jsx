@@ -10,13 +10,10 @@ export default function Cart() {
     const [checkoutSuccess, setCheckoutSuccess] = useState(false);
     const { cart, updateQuantity, removeFromCart, clearCart } = useContext(CartContext);
     const { user }= useAuth();
-
-    if(!cart || cart.length === 0) {
-        return <div>Loading...</div>;
-    }
+    console.log(user);
 
     if (cart.length === 0) {
-        return <div className="cart">Your cart is empty.</div>;
+        return <><div className="cart-empty">Your cart is empty</div></>;
     }
 
     const subtotal = cart.reduce((acc, cur) => acc + parseFloat(cur.price) * cur.quantity, 0);
@@ -27,8 +24,9 @@ export default function Cart() {
         setCheckoutError(null);
         setCheckoutSuccess(false);
 
-        if(!user) {
+        if(!user || !user.id) {
             setCheckoutError("Please login to checkout");
+            setCheckoutLoading(false);
             return;
         }
 
@@ -37,15 +35,16 @@ export default function Cart() {
                 product_id: item.id,
                 quantity: item.quantity,
             }));
+
             const result = await checkout({ user_id: user.id, items: items });
-            if(result.success) {
+            if(result.message === 'Order created successfully') {
                 setCheckoutSuccess(true);
                 clearCart();
             } else {
-                setCheckoutError(result.error);
+                setCheckoutError("Failed to checkout order");
             }
         } catch (error) {
-            setCheckoutError(error.message);
+            setCheckoutError("Failed to create order");
         } finally {
             setCheckoutLoading(false);
     }
@@ -55,9 +54,12 @@ export default function Cart() {
         <div className="cart">
             <h1>Your Cart</h1>
 
+            {checkoutError && <div className="error">{checkoutError}</div>}
+            {checkoutSuccess && <div className="success">Order placed successfully</div>}
+
             {cart.map((item) => (
-                <div className="row">
-                <div key={item.id} className="cart-row">
+                <div className="row" key={item.id}>
+                <div className="cart-row">
                     <div className="item-info">
                         <img src={item.image} alt={item.name} />
                         <div>

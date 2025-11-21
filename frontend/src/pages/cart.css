@@ -8,6 +8,30 @@
     border: #0f1111 1px solid;
     padding: 3rem;
 }
+
+.cart-empty{
+    text-align: center;
+    height: 100vh;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0f1111;
+}
+.button-primary{
+    background-color: #146EB4;
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    border: black solid 1px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin: 1rem auto;
+}
 .row{
     border: #0f1111 1px solid;
     border-radius: 3rem;
