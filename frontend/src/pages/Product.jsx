@@ -12,6 +12,7 @@ export default function Product() {
     const [error, setError] = useState(null);
     const { addToCart } = useContext(CartContext);
     const { fetchProductById } = useProducts();
+    const [addingToCart, setAddingToCart] = useState(false);
 
     useEffect(() => {
         const loadProduct = async () => {
@@ -35,6 +36,14 @@ export default function Product() {
 
         loadProduct();
     }, [id, fetchProductById]);
+
+    const handleAddToCart = async () => {
+        setAddingToCart(true);
+        addToCart(product);
+        setTimeout(() => {
+            setAddingToCart(false);
+        }, 500);
+    };
 
     if (loading) {
         return (
@@ -119,8 +128,8 @@ export default function Product() {
                             {/* Action Buttons Column */}
                             <div className="product-actions-column">
                                 <div className="product-actions">
-                                    <button onClick={() => addToCart(product)} className="add-to-cart-btn">
-                                        Add to Cart
+                                    <button onClick={handleAddToCart} className="add-to-cart-btn">
+                                        {addingToCart ? "Adding to Cart..." : "Add to Cart"}
                                     </button>
                                 </div>
                             </div>

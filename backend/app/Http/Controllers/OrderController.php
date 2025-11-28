@@ -45,9 +45,11 @@ class OrderController extends Controller
 
         $order->update([ // Update the order total amount
             'total_amount' => $totalAmount,
+            'status' => 'completed',
         ]);
         DB::commit(); // Commit the database transaction
 
+        
         return response()->json([
             'message' => 'Order created successfully',
             'order' => $order,
@@ -56,19 +58,13 @@ class OrderController extends Controller
     // Get an order by ID
     public function show($id)
     {
-        $order = Order::with('orderItems')->find($id);
-        if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
+        $order = Order::with('orderItems.product')->where('user_id', $id)->find($id);
         return response()->json($order);
-        }
+    }
     // Get all orders by user ID
     public function getByUserId($userId)
     {
-        $orders = Order::with('orderItems')->where('user_id', $userId)->get();
-        if (!$orders) {
-            return response()->json(['message' => 'Orders not found'], 404);
-        }
+        $orders = Order::with('orderItems.product')->where('user_id', $userId)->orderBy('created_at', 'desc')->get();
         return response()->json($orders);
     }
 }

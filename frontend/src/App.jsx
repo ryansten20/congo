@@ -9,6 +9,7 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Crime from "./pages/crime"
+import Orders from "./pages/orders"
 import {CartProvider} from "./context/CartContext.jsx";
 import {AuthProvider} from "./context/AuthContext.jsx";
 import {ProductProvider} from "./context/ProductContext.jsx";
@@ -52,6 +53,11 @@ function App() {
                             <Route path="/cart" element={
                                 <ProtectedRoute>
                                     <Cart />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="/orders" element={
+                                <ProtectedRoute>
+                                    <Orders />
                                 </ProtectedRoute>
                             } />
                             <Route path="/crime" element={
